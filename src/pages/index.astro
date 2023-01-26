@@ -1,0 +1,49 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+// type Clip = {
+//   id: string;
+//   url: string;
+//   embed_url: string;
+//   broadcaster_id: string;
+//   broadcaster_name: string;
+//   creator_id: string;
+//   creator_name: string;
+//   video_id: string;
+//   game_id: string;
+//   language: string;
+//   title: string;
+//   view_count: number;
+//   created_at: string;
+//   thumbnail_url: string;
+//   duration: number;
+//   vod_offset: null | string;
+// };
+
+export function getRandomEntry(array: any) {
+  function getRandomInt(min: number, max: number) {
+    return Math.round(Math.random() * (max - min) + min);
+  }
+
+  return array[getRandomInt(0, array.length - 1)];
+}
+
+const data = await fetch("https://whitep4nth3r.com/api/twitch");
+const stuff = await data.json();
+
+const { clips } = stuff;
+
+const randomClip = getRandomEntry(clips.data);
+---
+
+<Layout title="p4nth3rclips">
+  <main>
+    <iframe
+      title={randomClip.title}
+      width="1920"
+      height="1080"
+      src={randomClip.embed_url + `&parent=localhost`}
+    >
+    </iframe>
+  </main>
+</Layout>
