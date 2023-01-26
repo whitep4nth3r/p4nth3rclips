@@ -1,24 +1,24 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-// type Clip = {
-//   id: string;
-//   url: string;
-//   embed_url: string;
-//   broadcaster_id: string;
-//   broadcaster_name: string;
-//   creator_id: string;
-//   creator_name: string;
-//   video_id: string;
-//   game_id: string;
-//   language: string;
-//   title: string;
-//   view_count: number;
-//   created_at: string;
-//   thumbnail_url: string;
-//   duration: number;
-//   vod_offset: null | string;
-// };
+export type Clip = {
+  id: string;
+  url: string;
+  embed_url: string;
+  broadcaster_id: string;
+  broadcaster_name: string;
+  creator_id: string;
+  creator_name: string;
+  video_id: string;
+  game_id: string;
+  language: string;
+  title: string;
+  view_count: number;
+  created_at: string;
+  thumbnail_url: string;
+  duration: number;
+  vod_offset: null | string;
+};
 
 export function getRandomEntry(array: any) {
   function getRandomInt(min: number, max: number) {
@@ -33,17 +33,36 @@ const stuff = await data.json();
 
 const { clips } = stuff;
 
-const randomClip = getRandomEntry(clips.data);
+const randomClip: Clip = getRandomEntry(clips.data);
 ---
 
+<script>
+  const iframe = document.querySelector("iframe");
+
+  if (iframe) {
+    iframe.dispatchEvent(new MouseEvent("click"));
+  }
+</script>
+
+<meta http-equiv="refresh" content={randomClip.duration.toString()} />
 <Layout title="p4nth3rclips">
-  <main>
-    <iframe
-      title={randomClip.title}
-      width="1920"
-      height="1080"
-      src={randomClip.embed_url + `&parent=localhost&parent=p4nth3rclips.netlify.app`}
-    >
-    </iframe>
-  </main>
+  <iframe
+    title={randomClip.title}
+    width="624"
+    height="351"
+    allow="autoplay"
+    src={randomClip.embed_url +
+      `&muted=false&autoplay=true&parent=localhost&parent=p4nth3rclips.netlify.app`}
+  >
+  </iframe>
 </Layout>
+
+<ul>
+  {
+    clips.data.map((clip: Clip) => (
+      <li>
+        <a href={`/` + clip.id}>{clip.title}</a>
+      </li>
+    ))
+  }
+</ul>

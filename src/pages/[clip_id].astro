@@ -1,0 +1,37 @@
+---
+import Layout from "../layouts/Layout.astro";
+import type { Clip } from "./index.astro";
+
+export async function getStaticPaths() {
+  const data = await fetch("https://whitep4nth3r.com/api/twitch");
+  const stuff = await data.json();
+
+  const { clips } = stuff;
+
+  const params = clips.data.map((clip: Clip) => {
+    return { params: { clip_id: clip.id }, props: { clip } };
+  });
+
+  return params;
+}
+
+type Props = {
+  clip: Clip;
+};
+
+export const prerender = true;
+
+const { clip } = Astro.props;
+
+console.log(clip.id);
+---
+
+<Layout title={clip.title}>
+  <iframe
+    title={clip.title}
+    width="624"
+    height="351"
+    src={clip.embed_url + `&parent=localhost&parent=p4nth3rclips.netlify.app`}
+  >
+  </iframe>
+</Layout>
